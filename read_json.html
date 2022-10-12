@@ -1,0 +1,84 @@
+<!--
+Reads a JSON file and outputs the content into an HTML table
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div>
+    <h1>Equipment-wise Details</h1>
+     <br />
+      <div id="table-container">
+
+    </div>
+  </div>
+
+
+<script type="text/javascript">
+
+	fetch('data/machine-details.json')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+             appendData(data)
+        })
+        .catch(function (err) {
+        console.log('error: ' + err);
+    });
+
+    function appendData(table_data) {
+    	var mainContainer = document.getElementById("table-container");
+    	var tablecolumns = [];
+        for (var i = 0; i < table_data.length; i++) {
+            for (var key in table_data[i]) {
+                if (tablecolumns.indexOf(key) === -1) {
+                    tablecolumns.push(key);
+                }
+            }
+        }
+
+        //Creating html table and adding class to it
+        var tableEquipment = document.createElement("table");
+        tableEquipment.classList.add("table");
+        tableEquipment.classList.add("table-striped");
+        tableEquipment.classList.add("table-bordered");
+        tableEquipment.classList.add("table-hover");
+
+        //Creating header of the HTML table using
+        //tr
+        var tr = tableEquipment.insertRow(-1);
+
+        for (var i = 0; i < tablecolumns.length; i++) {
+            //header
+            var th = document.createElement("th");
+            th.innerHTML = table_data[0][tablecolumns[i]];;
+            tr.appendChild(th);
+        }
+
+        // Add employee JSON data in table as tr or rows
+        for (var i = 1; i < table_data.length; i++) {
+            tr = tableEquipment.insertRow(-1);
+            for (var j = 0; j < tablecolumns.length; j++) {
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = table_data[i][tablecolumns[j]];
+            }
+        }
+
+        //Final step , append html table to the container div
+        var tContainer = document.getElementById("table-container");
+        tContainer.innerHTML = "";
+        tContainer.appendChild(tableEquipment);
+    }
+</script>
+
+
+</body>
+</html>
